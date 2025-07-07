@@ -389,16 +389,52 @@ document.addEventListener('DOMContentLoaded', function () {
     let modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     modal.innerHTML = `
-      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-        <h2 class="text-3xl font-bold mb-4 text-primary">Congratulations!</h2>
-        <p class="text-lg text-gray-700 mb-6">You completed all the puzzles and learned about the importance of clean water! Thank you for your commitment to making a difference with charity: water.</p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-4">
+      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center" style="position:relative;overflow:hidden;">
+        <div id="confetti-canvas-container" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></div>
+        <h2 class="text-3xl font-bold mb-4 text-primary" style="position:relative;z-index:2;">Congratulations!</h2>
+        <p class="text-lg text-gray-700 mb-6" style="position:relative;z-index:2;">You completed all the puzzles and learned about the importance of clean water! Thank you for your commitment to making a difference with charity: water.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-4" style="position:relative;z-index:2;">
           <button class="bg-yellow-500 text-white font-semibold py-3 px-6 !rounded-button hover:bg-yellow-600 transition whitespace-nowrap" id="visit-charitywater-btn">Visit charity: water</button>
           <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="exit-game-btn">Exit Game</button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
+    // Confetti animation (simple DOM-based for beginners)
+    function launchConfetti() {
+      const container = modal.querySelector('#confetti-canvas-container');
+      for (let i = 0; i < 60; i++) {
+        const conf = document.createElement('div');
+        // Random color from a water/charity: water palette
+        const colors = ['#1fb6ff', '#FFC907', '#2E9DF7', '#8BD1CB', '#4FCB53', '#FF902A', '#F5402C'];
+        conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.position = 'absolute';
+        conf.style.width = `${Math.random() * 8 + 6}px`;
+        conf.style.height = `${Math.random() * 16 + 8}px`;
+        conf.style.left = `${Math.random() * 100}%`;
+        conf.style.top = '-30px';
+        conf.style.opacity = '0.85';
+        conf.style.borderRadius = '2px';
+        conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+        conf.style.zIndex = '2';
+        // Animate falling
+        const duration = Math.random() * 1.2 + 1.8; // 1.8s to 3s
+        const delay = Math.random() * 0.5;
+        conf.animate([
+          { top: '-30px', opacity: 0.85 },
+          { top: `${Math.random() * 60 + 60}%`, opacity: 1 },
+          { top: '110%', opacity: 0.2 }
+        ], {
+          duration: duration * 1000,
+          delay: delay * 1000,
+          easing: 'cubic-bezier(0.4,0,0.2,1)',
+          fill: 'forwards'
+        });
+        setTimeout(() => { container.removeChild(conf); }, (duration + delay) * 1000);
+        container.appendChild(conf);
+      }
+    }
+    launchConfetti();
     // Visit charity: water
     modal.querySelector('#visit-charitywater-btn').onclick = function() {
       window.open('https://www.charitywater.org', '_blank');
