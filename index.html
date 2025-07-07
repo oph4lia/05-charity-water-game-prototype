@@ -1,346 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wordlingo - Play to help fill the well</title>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:'#1fb6ff',secondary:'#ff7849'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordlingo - Play to help fill the well</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1fb6ff',
+            secondary: '#ff7849'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body class="min-h-screen">
-<!-- Splash Screen -->
-<div class="splash-screen active flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white">
-<div class="relative mb-8">
-<div class="text-6xl font-['Pacifico'] text-primary mb-2">Wordlingo</div>
-<div class="absolute -right-4 -top-4 w-8 h-8 flex items-center justify-center">
-<i class="ri-drop-line text-primary ri-2x"></i>
-</div>
-</div>
-<div class="loading-droplet mb-8"></div>
-<p class="text-lg text-gray-600 font-medium">Play to help fill the well</p>
-<div class="absolute bottom-8 flex items-center text-sm text-gray-500">
-<div class="w-4 h-4 flex items-center justify-center mr-1">
-<i class="ri-heart-line"></i>
-</div>
-<span>A project by charity: water</span>
-</div>
-</div>
-<!-- Start Screen -->
-<div class="start-screen min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-blue-50 to-white relative overflow-hidden">
-<div class="absolute inset-0 pointer-events-none">
-<div class="water-drops"></div>
-</div>
-<div class="max-w-xl w-full text-center relative z-10">
-<div class="relative inline-block mb-6">
-<h1 class="text-6xl font-['Pacifico'] text-primary animate-title">Wordlingo</h1>
-<div class="absolute -right-6 -top-4 w-8 h-8 flex items-center justify-center">
-<i class="ri-drop-line text-primary ri-2x animate-bounce"></i>
-</div>
-</div>
-<h2 class="text-3xl font-bold mb-4 text-gray-800 animate-fade-up">Word Puzzles for Clean Water</h2>
-<p class="text-gray-600 text-lg mb-12 leading-relaxed animate-fade-up">Fill in the blanks with water-themed words to help provide clean water to communities in need. Every correct answer brings us closer to our mission.</p>
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-<div class="bg-white rounded-lg p-6 shadow-md transform hover:scale-105 transition-all">
-<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-<div class="w-6 h-6 flex items-center justify-center">
-<i class="ri-trophy-line text-primary"></i>
-</div>
-</div>
-<h3 class="font-semibold mb-2">Daily Challenge</h3>
-<p class="text-sm text-gray-600">New puzzles every day</p>
-</div>
-<div class="bg-white rounded-lg p-6 shadow-md transform hover:scale-105 transition-all">
-<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-<div class="w-6 h-6 flex items-center justify-center">
-<i class="ri-heart-line text-primary"></i>
-</div>
-</div>
-<h3 class="font-semibold mb-2">Make an Impact</h3>
-<p class="text-sm text-gray-600">Help provide clean water</p>
-</div>
-</div>
-<div class="flex flex-col items-center gap-4 mb-16">
-<button class="bg-primary text-white font-semibold py-4 px-12 w-64 !rounded-button hover:bg-blue-600 transition-all transform hover:scale-105 whitespace-nowrap flex items-center justify-center gap-2 animate-bounce-subtle" id="start-game-btn">
-<span>Start Game</span>
-<div class="w-5 h-5 flex items-center justify-center">
-<i class="ri-arrow-right-line"></i>
-</div>
-</button>
-<button class="text-gray-700 font-medium py-3 px-8 border-2 border-gray-300 !rounded-button hover:bg-gray-50 transition whitespace-nowrap flex items-center gap-2" id="how-to-play-btn">
-<div class="w-5 h-5 flex items-center justify-center">
-<i class="ri-question-line"></i>
-</div>
-<span>How to Play</span>
-</button>
-</div>
-<div class="flex flex-col items-center">
-<p class="text-sm text-gray-500 mb-2">A project by</p>
-<div class="text-2xl font-['Pacifico'] text-primary">charity: water</div>
-</div>
-</div>
-</div>
-<!-- How to Play Screen -->
-<div class="how-to-play-screen min-h-screen flex flex-col">
-<div class="p-4">
-<button class="flex items-center text-gray-700 hover:text-primary transition" id="back-to-start-btn">
-<div class="w-6 h-6 flex items-center justify-center mr-1">
-<i class="ri-arrow-left-line"></i>
-</div>
-Back
-</button>
-</div>
-<div class="flex-1 flex flex-col items-center justify-center px-4 py-8">
-<h2 class="text-3xl font-bold mb-12">How to Play</h2>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full mb-12">
-<div class="bg-white p-6 rounded-lg shadow-md text-center">
-<div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full mx-auto mb-4">
-<span class="font-bold text-xl">1</span>
-</div>
-<h3 class="font-semibold mb-2">Tap the blank</h3>
-<p class="text-gray-600">Fill in the missing word in each water-related phrase</p>
-<div class="mt-4 h-32 flex items-center justify-center">
-<div class="bg-gray-100 p-3 rounded w-full">
-<p>Water is our most precious <span class="puzzle-blank"></span></p>
-</div>
-</div>
-</div>
-<div class="bg-white p-6 rounded-lg shadow-md text-center">
-<div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full mx-auto mb-4">
-<span class="font-bold text-xl">2</span>
-</div>
-<h3 class="font-semibold mb-2">Type your answer</h3>
-<p class="text-gray-600">Submit your answer before the timer runs out</p>
-<div class="mt-4 h-32 flex items-center justify-center">
-<div class="bg-gray-100 p-3 rounded w-full">
-<div class="flex">
-<input type="text" class="custom-input" placeholder="resource" />
-<button class="ml-2 bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap">Submit</button>
-</div>
-</div>
-</div>
-</div>
-<div class="bg-white p-6 rounded-lg shadow-md text-center">
-<div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full mx-auto mb-4">
-<span class="font-bold text-xl">3</span>
-</div>
-<h3 class="font-semibold mb-2">Fill the well</h3>
-<p class="text-gray-600">Each correct answer helps fill the virtual well</p>
-<div class="mt-4 h-32 flex items-center justify-center">
-<div class="bg-gray-100 p-3 rounded w-full">
-<div class="well-progress">
-<div class="well-fill" style="width: 65%"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<button class="bg-primary text-white font-semibold py-3 px-8 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="lets-go-btn">
-Let's Go!
-</button>
-</div>
-</div>
-<!-- Game Screen -->
-<div class="game-screen min-h-screen flex flex-col">
-<div class="bg-white shadow-sm py-4 px-6">
-<div class="max-w-4xl mx-auto flex items-center justify-between">
-<div class="flex items-center">
-<div class="w-6 h-6 flex items-center justify-center mr-2">
-<i class="ri-water-flash-line text-primary"></i>
-</div>
-<span class="font-semibold">Score: <span id="score-display">120</span></span>
-</div>
-<div class="flex items-center">
-<div class="w-6 h-6 flex items-center justify-center mr-2">
-<i class="ri-time-line text-gray-600"></i>
-</div>
-<span class="font-semibold" id="timer-display">0:45</span>
-</div>
-<div class="flex items-center">
-<span class="mr-2 text-sm">Well:</span>
-<div class="well-progress w-24">
-<div class="well-fill" style="width: 40%"></div>
-</div>
-</div>
-<button id="pause-btn" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary transition">
-<i class="ri-pause-line"></i>
-</button>
-</div>
-</div>
-<div class="flex-1 flex flex-col items-center justify-center px-4 py-8">
-<div class="max-w-2xl w-full bg-white rounded-lg shadow-md p-8 mb-8">
-<h2 class="text-2xl font-semibold mb-6 text-center">Puzzle #5</h2>
-<p class="text-xl text-center mb-8">
-Clean water is essential for human <span class="puzzle-blank"></span> and well-being.
-</p>
-<div class="flex mb-6">
-<input type="text" class="custom-input" id="answer-input" placeholder="Type your answer..." />
-<button class="ml-3 bg-primary text-white px-6 py-2 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="submit-answer-btn">
-Submit
-</button>
-</div>
-<div class="text-center text-green-600 font-medium" id="feedback-message">
-Correct! +20 points
-</div>
-</div>
-<div class="flex justify-center space-x-6 mb-8">
-<div class="flex flex-col items-center">
-<button class="power-up-btn mb-2" id="hint-btn">
-<div class="w-6 h-6 flex items-center justify-center">
-<i class="ri-lightbulb-line text-yellow-500"></i>
-</div>
-</button>
-<span class="text-sm text-gray-600">Hint</span>
-</div>
-<div class="flex flex-col items-center">
-<button class="power-up-btn mb-2" id="time-btn">
-<div class="w-6 h-6 flex items-center justify-center">
-<i class="ri-add-line text-blue-500"></i>
-</div>
-</button>
-<span class="text-sm text-gray-600">+10s</span>
-</div>
-<div class="flex flex-col items-center">
-<button class="power-up-btn mb-2" id="purify-btn">
-<div class="w-6 h-6 flex items-center justify-center">
-<i class="ri-drop-line text-primary"></i>
-</div>
-</button>
-<span class="text-sm text-gray-600">Purify</span>
-</div>
-</div>
-<div class="text-center text-sm text-gray-500">
-<p>Tip: Look for context clues in the sentence to find the right answer.</p>
-</div>
-</div>
-</div>
-<!-- Pollutant Challenge -->
-<div class="pollutant-challenge fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
-<div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-<div class="flex items-center justify-center mb-4">
-<div class="w-12 h-12 flex items-center justify-center bg-red-100 rounded-full text-red-600">
-<i class="ri-alert-line ri-xl"></i>
-</div>
-</div>
-<h3 class="text-2xl font-bold text-center mb-4">Pollutant Alert!</h3>
-<p class="text-gray-600 text-center mb-6">
-Oh no! A pollutant has scrambled your puzzle. Solve it quickly before it spreads!
-</p>
-<div class="flex justify-center mb-6">
-<div class="bg-gray-100 rounded-full px-6 py-2 font-semibold text-xl" id="pollutant-timer">
-0:15
-</div>
-</div>
-<div class="bg-gray-100 p-4 rounded-lg mb-6">
-<p class="text-center font-medium">
-Cnela rwtea si snseeital rfo nuamh _____ nad lelw-nigbe.
-</p>
-</div>
-<div class="flex justify-center">
-<button class="bg-primary text-white font-semibold py-2 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="continue-challenge-btn">
-Continue Challenge
-</button>
-</div>
-</div>
-</div>
-<!-- Game Over Screen -->
-<div class="game-over-screen min-h-screen flex flex-col items-center justify-center px-4 py-8">
-<div class="max-w-lg w-full text-center">
-<h2 class="text-4xl font-bold mb-2">Well Done!</h2>
-<p class="text-gray-600 mb-8">You've completed the challenge!</p>
-<div class="bg-white rounded-lg shadow-md p-6 mb-8">
-<div class="flex justify-between mb-4">
-<span class="text-gray-600">Final Score:</span>
-<span class="font-semibold">320 points</span>
-</div>
-<div class="flex justify-between mb-4">
-<span class="text-gray-600">Correct Answers:</span>
-<span class="font-semibold">16/20</span>
-</div>
-<div class="flex justify-between mb-4">
-<span class="text-gray-600">Time Bonus:</span>
-<span class="font-semibold">+40 points</span>
-</div>
-<div class="h-px bg-gray-200 my-4"></div>
-<div class="text-center py-2">
-<p class="text-lg font-medium mb-2">Your Impact</p>
-<p class="text-gray-600">You helped 20 people gain access to clean water!</p>
-</div>
-<div class="mt-6">
-<div class="well-progress">
-<div class="well-fill" style="width: 100%"></div>
-</div>
-</div>
-</div>
-<div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-<button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="play-again-btn">
-Play Again
-</button>
-<button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="share-btn">
-<div class="flex items-center justify-center">
-<div class="w-5 h-5 flex items-center justify-center mr-1">
-<i class="ri-share-line"></i>
-</div>
-Share
-</div>
-</button>
-<button class="bg-yellow-500 text-white font-semibold py-3 px-6 !rounded-button hover:bg-yellow-600 transition whitespace-nowrap" id="donate-btn">
-Donate
-</button>
-</div>
-<div class="text-center">
-<p class="text-sm text-gray-500 mb-2">A project by</p>
-<div class="text-xl font-['Pacifico'] text-primary">charity: water</div>
-</div>
-</div>
-</div>
-<!-- Pause Menu -->
-<div class="pause-menu fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
-<div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full">
-<h3 class="text-2xl font-bold text-center mb-8">Game Paused</h3>
-<div class="flex flex-col space-y-4">
-<button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="resume-btn">
-Resume Game
-</button>
-<button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="restart-btn">
-Restart Level
-</button>
-<button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="how-to-play-pause-btn">
-How to Play
-</button>
-<button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="exit-btn">
-Exit Game
-</button>
-</div>
-<div class="mt-6 flex items-center">
-<input type="checkbox" id="sound-toggle" class="custom-checkbox mr-3">
-<label for="sound-toggle" class="text-gray-700">Sound Effects</label>
-</div>
-</div>
-</div>
-<!-- Error Screen -->
-<div class="error-screen min-h-screen flex flex-col items-center justify-center px-4">
-<div class="max-w-md w-full text-center">
-<div class="w-20 h-20 flex items-center justify-center bg-red-100 rounded-full mx-auto mb-6 text-red-600">
-<i class="ri-error-warning-line ri-2x"></i>
-</div>
-<h2 class="text-2xl font-bold mb-4">Something went wrong</h2>
-<p class="text-gray-600 mb-8">We're having trouble loading the game. Please try again.</p>
-<div class="flex flex-col sm:flex-row justify-center gap-4">
-<button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="retry-btn">
-Retry
-</button>
-<button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="return-menu-btn">
-Return to Menu
-</button>
-</div>
-</div>
-</div>
-<script src="script.js"></script>
+
+  <!-- Splash Screen -->
+  <div class="splash-screen active flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white relative">
+    <div class="relative mb-8">
+      <div class="text-6xl font-['Pacifico'] text-primary mb-2">Wordlingo</div>
+      <div class="absolute -right-4 -top-4 w-8 h-8 flex items-center justify-center">
+        <i class="ri-drop-line text-primary ri-2x"></i>
+      </div>
+    </div>
+    <div class="loading-droplet mb-8"></div>
+    <p class="text-lg text-gray-600 font-medium">Play to help fill the well</p>
+    <!-- ...removed water can image for cleaner splash screen... -->
+    <!-- Replace the 'A project by charity: water' area with the logo -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+      <img src="img/cw_logo.png" alt="charity: water logo" style="width: 120px; opacity: 0.95;" />
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="start-screen min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-blue-50 to-white relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="water-drops"></div>
+    </div>
+    <div class="max-w-xl w-full text-center relative z-10">
+      <div class="relative inline-block mb-6">
+        <h1 class="text-6xl font-['Pacifico'] text-primary animate-title">Wordlingo</h1>
+        <div class="absolute -right-6 -top-4 w-8 h-8 flex items-center justify-center">
+          <i class="ri-drop-line text-primary ri-2x animate-bounce"></i>
+        </div>
+      </div>
+      <h2 class="text-3xl font-bold mb-4 text-gray-800 animate-fade-up">Word Puzzles for Clean Water</h2>
+      <p class="text-gray-600 text-lg mb-12 leading-relaxed animate-fade-up">
+        Fill in the blanks with water-themed words to help provide clean water to communities in need. Every correct answer brings us closer to our mission.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+        <div class="bg-white rounded-lg p-6 shadow-md transform hover:scale-105 transition-all">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-trophy-line text-primary"></i>
+            </div>
+          </div>
+          <h3 class="font-semibold mb-2">Daily Challenge</h3>
+          <p class="text-sm text-gray-600">New puzzles every day</p>
+        </div>
+        <div class="bg-white rounded-lg p-6 shadow-md transform hover:scale-105 transition-all">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-heart-line text-primary"></i>
+            </div>
+          </div>
+          <h3 class="font-semibold mb-2">Make an Impact</h3>
+          <p class="text-sm text-gray-600">Help provide clean water</p>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-4 mb-16">
+        <button class="bg-primary text-white font-semibold py-4 px-12 w-64 !rounded-button hover:bg-blue-600 transition-all transform hover:scale-105 whitespace-nowrap flex items-center justify-center gap-2 animate-bounce-subtle" id="start-game-btn">
+          <span>Start Game</span>
+          <div class="w-5 h-5 flex items-center justify-center">
+            <i class="ri-arrow-right-line"></i>
+          </div>
+        </button>
+        <button class="text-gray-700 font-medium py-3 px-8 border-2 border-gray-300 !rounded-button hover:bg-gray-50 transition whitespace-nowrap flex items-center gap-2" id="how-to-play-btn">
+          <div class="w-5 h-5 flex items-center justify-center">
+            <i class="ri-question-line"></i>
+          </div>
+          <span>How to Play</span>
+        </button>
+      </div>
+      <!-- Replace the 'A project by charity: water' area with the logo -->
+      <div class="flex flex-col items-center mt-8">
+        <img src="img/cw_logo.png" alt="charity: water logo" style="width: 120px; opacity: 0.95;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Play Screen -->
+  <div class="how-to-play-screen min-h-screen flex flex-col">
+    <div class="p-4">
+      <button class="flex items-center text-gray-700 hover:text-primary transition" id="back-to-start-btn">
+        <div class="w-6 h-6 flex items-center justify-center mr-1">
+          <i class="ri-arrow-left-line"></i>
+        </div>
+        Back
+      </button>
+    </div>
+    <div class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+      <h2 class="text-3xl font-bold mb-12">How to Play</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full mb-12">
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+          <div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full mx-auto mb-4">
+            <span class="font-bold text-xl">1</span>
+          </div>
+          <h3 class="font-semibold mb-2">Tap the blank</h3>
+          <p class="text-gray-600">Fill in the missing word in each water-related phrase</p>
+          <div class="mt-4 h-32 flex items-center justify-center">
+            <div class="bg-gray-100 p-3 rounded w-full">
+              <p>Water is our most precious <span class="puzzle-blank"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+          <div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full mx-auto mb-4">
+            <span class="font-bold text-xl">2</span>
+          </div>
+          <h3 class="font-semibold mb-2">Type your answer</h3>
+          <p class="text-gray-600">Submit your answer before the timer runs out</p>
+          <div class="mt-4 h-32 flex items-center justify-center">
+            <div class="bg-gray-100 p-3 rounded w-full">
+              <div class="flex">
+                <input type="text" class="custom-input" placeholder="resource" />
+                <button class="ml-2 bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+          <div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded-full mx-auto mb-4">
+            <span class="font-bold text-xl">3</span>
+          </div>
+          <h3 class="font-semibold mb-2">Fill the well</h3>
+          <p class="text-gray-600">Each correct answer helps fill the virtual well</p>
+          <div class="mt-4 h-32 flex items-center justify-center">
+            <div class="bg-gray-100 p-3 rounded w-full">
+              <div class="well-progress">
+                <div class="well-fill" style="width: 65%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="bg-primary text-white font-semibold py-3 px-8 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="lets-go-btn">
+        Let's Go!
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div class="game-screen min-h-screen flex flex-col">
+    <div class="bg-white shadow-sm py-3 px-2 sm:px-4">
+      <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2 sm:gap-0">
+        <!-- Score and Logo -->
+        <div class="flex items-center min-w-0 flex-1 sm:flex-none">
+          <!-- Mobile: water droplet icon -->
+          <span class="block sm:hidden mr-2">
+            <span class="inline-flex items-center justify-center w-8 h-8">
+              <i class="ri-drop-line text-primary animate-bounce-subtle text-2xl"></i>
+            </span>
+          </span>
+          <!-- Desktop: Wordlingo text and icon -->
+          <span class="hidden sm:flex items-center">
+            <span class="text-3xl font-['Pacifico'] text-primary mr-4 wordlingo-desktop">Wordlingo</span>
+            <span class="w-6 h-6 flex items-center justify-center mr-2">
+              <i class="ri-water-flash-line text-primary"></i>
+            </span>
+          </span>
+          <!-- Mobile: score in a circle, Desktop: score inline -->
+          <span class="block sm:hidden ml-1">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-primary font-bold text-base" id="score-display">120</span>
+          </span>
+          <span class="hidden sm:inline font-semibold text-base ml-2">Score: <span id="score-display-desktop">120</span></span>
+        </div>
+        <!-- Timer -->
+        <div class="flex items-center min-w-0 flex-1 sm:flex-none justify-center sm:justify-start">
+          <div class="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center mr-1 sm:mr-2">
+            <i class="ri-time-line text-gray-600"></i>
+          </div>
+          <span class="font-semibold text-sm sm:text-base" id="timer-display">0:45</span>
+        </div>
+        <!-- Well Bar -->
+        <div class="flex items-center min-w-0 flex-1 sm:flex-none justify-center sm:justify-start">
+          <span class="mr-1 sm:mr-2 text-xs sm:text-sm">Well:</span>
+          <div class="well-progress w-16 sm:w-24" style="position: relative;">
+            <div class="well-fill" id="well-fill-bar" style="width: 0%"></div>
+            <!-- Water can image removed: now handled by JS only -->
+          </div>
+        </div>
+        <!-- Pause Button -->
+        <div class="flex items-center min-w-0 flex-1 sm:flex-none justify-end">
+          <button id="pause-btn" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary transition">
+            <i class="ri-pause-line"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="flex-1 flex flex-col items-center justify-center px-2 py-4 sm:px-4 sm:py-8">
+      <!-- Puzzle Card -->
+      <div class="w-full max-w-md bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 sm:mb-8" style="box-sizing: border-box;">
+        <h2 class="text-lg sm:text-2xl font-semibold mb-4 sm:mb-6 text-left sm:text-center">Fill in the blank:</h2>
+        <p class="text-base sm:text-xl text-left sm:text-center mb-6 sm:mb-8">
+          Clean water is essential for human <span class="puzzle-blank"></span> and well-being.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 mb-4 sm:mb-6">
+          <input type="text" class="custom-input flex-1" id="answer-input" placeholder="Type your answer..." />
+          <button class="sm:ml-3 bg-yellow-400 text-white px-4 sm:px-6 py-2 !rounded-button hover:bg-yellow-500 transition whitespace-nowrap font-semibold" id="submit-answer-btn">
+            Submit
+          </button>
+        </div>
+        <div class="text-center text-green-600 font-medium min-h-[24px]" id="feedback-message">
+          <!-- Feedback will appear here -->
+        </div>
+      </div>
+      <!-- Power-Ups Row -->
+      <div class="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-8 w-full max-w-md">
+        <!-- Hint Power-Up -->
+        <div class="flex flex-col items-center flex-1">
+          <button class="power-up-btn mb-1" id="hint-btn">
+            <div class="w-7 h-7 flex items-center justify-center">
+              <i class="ri-lightbulb-line text-yellow-500"></i>
+            </div>
+          </button>
+          <div class="flex items-center gap-1">
+            <span class="text-xs sm:text-sm text-gray-600">Hint</span>
+            <span id="hint-count" class="text-xs bg-yellow-100 text-yellow-700 rounded-full px-2 ml-1">0</span>
+          </div>
+        </div>
+        <!-- Time Power-Up -->
+        <div class="flex flex-col items-center flex-1">
+          <button class="power-up-btn mb-1" id="time-btn">
+            <div class="w-7 h-7 flex items-center justify-center">
+              <i class="ri-add-line text-blue-500"></i>
+            </div>
+          </button>
+          <div class="flex items-center gap-1">
+            <span class="text-xs sm:text-sm text-gray-600">+10s</span>
+            <span id="time-count" class="text-xs bg-blue-100 text-blue-700 rounded-full px-2 ml-1">0</span>
+          </div>
+        </div>
+        <!-- Purify Power-Up -->
+        <div class="flex flex-col items-center flex-1">
+          <button class="power-up-btn mb-1" id="purify-btn">
+            <div class="w-7 h-7 flex items-center justify-center">
+              <i class="ri-drop-line text-primary"></i>
+            </div>
+          </button>
+          <div class="flex items-center gap-1">
+            <span class="text-xs sm:text-sm text-gray-600">Purify</span>
+            <span id="purify-count" class="text-xs bg-yellow-100 text-yellow-700 rounded-full px-2 ml-1">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center text-xs sm:text-sm text-gray-500 mb-2 sm:mb-0">
+        <p>Tip: Look for context clues in the sentence to find the right answer.</p>
+      </div>
+      <!-- Horizontal charity: water logo for mobile screens -->
+      <div class="flex justify-center mt-2 mb-2 sm:hidden">
+        <img src="img/cw_logo_horizontal.png" alt="charity: water horizontal logo" style="max-width: 180px; width: 100%; opacity: 0.95;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Pollutant Challenge -->
+  <div class="pollutant-challenge fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+      <div class="flex items-center justify-center mb-4">
+        <div class="w-12 h-12 flex items-center justify-center bg-red-100 rounded-full text-red-600">
+          <i class="ri-alert-line ri-xl"></i>
+        </div>
+      </div>
+      <h3 class="text-2xl font-bold text-center mb-4">Pollutant Alert!</h3>
+      <p class="text-gray-600 text-center mb-6">
+        Oh no! A pollutant has scrambled your puzzle. Solve it to continue!
+      </p>
+      <div class="flex justify-center mb-6">
+        <div class="bg-gray-100 rounded-full px-6 py-2 font-semibold text-xl" id="pollutant-timer">
+          0:15
+        </div>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-lg mb-6">
+        <p class="text-center font-medium" id="pollutant-puzzle-text">
+          <!-- Scrambled puzzle will go here -->
+        </p>
+      </div>
+      <div class="flex mb-4">
+        <input type="text" class="custom-input" id="pollutant-answer-input" placeholder="Type your answer..." />
+        <button class="ml-3 bg-primary text-white px-6 py-2 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="pollutant-submit-answer-btn">
+          Submit
+        </button>
+      </div>
+      <div class="flex justify-center space-x-6 mb-4">
+        <div class="flex flex-col items-center">
+          <button class="power-up-btn mb-2" id="pollutant-purify-btn">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-drop-line text-primary"></i>
+            </div>
+          </button>
+          <div class="flex items-center gap-1">
+            <span class="text-sm text-gray-600">Purify</span>
+            <span id="purify-count" class="text-xs bg-yellow-100 text-yellow-700 rounded-full px-2 ml-1">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center text-green-600 font-medium" id="pollutant-feedback-message"></div>
+    </div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div class="game-over-screen min-h-screen flex flex-col items-center justify-center px-4 py-8">
+    <div class="max-w-lg w-full text-center">
+      <h2 class="text-4xl font-bold mb-2">Well Done!</h2>
+      <p class="text-gray-600 mb-8">You've completed the challenge!</p>
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex justify-between mb-4">
+          <span class="text-gray-600">Final Score:</span>
+          <span class="font-semibold">320 points</span>
+        </div>
+        <div class="flex justify-between mb-4">
+          <span class="text-gray-600">Correct Answers:</span>
+          <span class="font-semibold">16/20</span>
+        </div>
+        <div class="flex justify-between mb-4">
+          <span class="text-gray-600">Time Bonus:</span>
+          <span class="font-semibold">+40 points</span>
+        </div>
+        <div class="h-px bg-gray-200 my-4"></div>
+        <div class="text-center py-2">
+          <p class="text-lg font-medium mb-2">Your Impact</p>
+          <p class="text-gray-600">You helped 20 people gain access to clean water!</p>
+        </div>
+        <div class="mt-6">
+          <div class="well-progress">
+            <div class="well-fill" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+        <button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="play-again-btn">
+          Play Again
+        </button>
+        <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="share-btn">
+          <div class="flex items-center justify-center">
+            <div class="w-5 h-5 flex items-center justify-center mr-1">
+              <i class="ri-share-line"></i>
+            </div>
+            Share
+          </div>
+        </button>
+        <button class="bg-yellow-500 text-white font-semibold py-3 px-6 !rounded-button hover:bg-yellow-600 transition whitespace-nowrap" id="donate-btn">
+          Donate
+        </button>
+      </div>
+      <div class="text-center">
+        <p class="text-sm text-gray-500 mb-2">A project by</p>
+        <div class="text-xl font-['Pacifico'] text-primary">charity: water</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pause Menu -->
+  <div class="pause-menu fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full">
+      <h3 class="text-2xl font-bold text-center mb-8">Game Paused</h3>
+      <div class="flex flex-col space-y-4">
+        <button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="resume-btn">
+          Resume Game
+        </button>
+        <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="restart-btn">
+          Restart Level
+        </button>
+        <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="how-to-play-pause-btn">
+          How to Play
+        </button>
+        <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="exit-btn">
+          Exit Game
+        </button>
+      </div>
+      <div class="mt-6 flex items-center">
+        <input type="checkbox" id="sound-toggle" class="custom-checkbox mr-3">
+        <label for="sound-toggle" class="text-gray-700">Sound Effects</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Screen -->
+  <div class="error-screen min-h-screen flex flex-col items-center justify-center px-4">
+    <div class="max-w-md w-full text-center">
+      <div class="w-20 h-20 flex items-center justify-center bg-red-100 rounded-full mx-auto mb-6 text-red-600">
+        <i class="ri-error-warning-line ri-2x"></i>
+      </div>
+      <h2 class="text-2xl font-bold mb-4">Something went wrong</h2>
+      <p class="text-gray-600 mb-8">We're having trouble loading the game. Please try again.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="retry-btn">
+          Retry
+        </button>
+        <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="return-menu-btn">
+          Return to Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
