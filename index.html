@@ -152,16 +152,23 @@
           <p class="text-gray-600">Each correct answer helps fill the virtual well</p>
           <div class="mt-4 h-32 flex items-center justify-center">
             <div class="bg-gray-100 p-3 rounded w-full">
-              <div class="well-progress">
+              <div class="well-progress well-progress-demo">
                 <div class="well-fill" style="width: 65%"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <button class="bg-primary text-white font-semibold py-3 px-8 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="lets-go-btn">
-        Let's Go!
-      </button>
+      <!-- Power-Ups Info Section -->
+      <div class="mt-10 max-w-lg mx-auto bg-white bg-opacity-90 rounded-xl shadow p-6">
+        <h3 class="text-xl font-bold mb-4 text-primary flex items-center gap-2"><i class="ri-flashlight-line text-yellow-400"></i> Power-Ups</h3>
+        <ul class="space-y-3 text-gray-700 text-base">
+          <li><b>Hint</b> <i class="ri-lightbulb-line text-yellow-500"></i>: Reveals the first letter of the answer. <br><span class="text-sm text-gray-500">Start with <b>5</b>. Earn more by filling the well or as a random reward.</span></li>
+          <li><b>+10s</b> <i class="ri-add-line text-blue-500"></i>: Adds 10 seconds to your timer. <br><span class="text-sm text-gray-500">Start with <b>2</b>. Earn more by filling the well or as a random reward.</span></li>
+          <li><b>Purify</b> <i class="ri-drop-line text-primary"></i>: During a pollutant level, unscrambles the sentence (but you still have to guess). <br><span class="text-sm text-gray-500">Start with <b>1</b>. Earn more by filling the well or as a random reward.</span></li>
+        </ul>
+        <div class="mt-4 text-sm text-gray-600">Power-ups are shown below the puzzle card during the game. Use them wisely!</div>
+      </div>
     </div>
   </div>
 
@@ -197,14 +204,6 @@
           </div>
           <span class="font-semibold text-sm sm:text-base" id="timer-display">0:45</span>
         </div>
-        <!-- Well Bar -->
-        <div class="flex items-center min-w-0 flex-1 sm:flex-none justify-center sm:justify-start">
-          <span class="mr-1 sm:mr-2 text-xs sm:text-sm">Well:</span>
-          <div class="well-progress w-16 sm:w-24" style="position: relative;">
-            <div class="well-fill" id="well-fill-bar" style="width: 0%"></div>
-            <!-- Water can image removed: now handled by JS only -->
-          </div>
-        </div>
         <!-- Pause Button -->
         <div class="flex items-center min-w-0 flex-1 sm:flex-none justify-end">
           <button id="pause-btn" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-primary transition">
@@ -214,20 +213,30 @@
       </div>
     </div>
     <div class="flex-1 flex-center-col px-2 py-4 sm:px-4 sm:py-8">
-      <!-- Puzzle Card -->
-      <div class="w-full max-w-md bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 sm:mb-8" style="box-sizing: border-box;">
-        <h2 class="text-lg sm:text-2xl font-semibold mb-4 sm:mb-6 text-left sm:text-center">Fill in the blank:</h2>
-        <p class="text-base sm:text-xl text-left sm:text-center mb-6 sm:mb-8">
-          Clean water is essential for human <span class="puzzle-blank"></span> and well-being.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 mb-4 sm:mb-6">
-          <input type="text" class="custom-input flex-1" id="answer-input" placeholder="Type your answer..." />
-          <button class="sm:ml-3 bg-yellow-400 text-white px-4 sm:px-6 py-2 !rounded-button hover:bg-yellow-500 transition whitespace-nowrap font-semibold" id="submit-answer-btn">
-            Submit
-          </button>
+      <!-- Flex container for puzzle card and well -->
+      <div class="game-main-row flex flex-col sm:flex-row items-center justify-center gap-8 w-full max-w-3xl mx-auto">
+        <!-- Puzzle Card -->
+        <div class="w-full max-w-md bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 sm:mb-8 sm:mb-0" style="box-sizing: border-box;">
+          <h2 class="text-lg sm:text-2xl font-semibold mb-4 sm:mb-6 text-left sm:text-center">Fill in the blank:</h2>
+          <p class="text-base sm:text-xl text-left sm:text-center mb-6 sm:mb-8">
+            Clean water is essential for human <span class="puzzle-blank"></span> and well-being.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-0 mb-4 sm:mb-6">
+            <input type="text" class="custom-input flex-1" id="answer-input" placeholder="Type your answer..." />
+            <button class="sm:ml-3 bg-yellow-400 text-white px-4 sm:px-6 py-2 !rounded-button hover:bg-yellow-500 transition whitespace-nowrap font-semibold" id="submit-answer-btn">
+              Submit
+            </button>
+          </div>
+          <div class="text-center text-green-600 font-medium min-h-[24px]" id="feedback-message">
+            <!-- Feedback will appear here -->
+          </div>
         </div>
-        <div class="text-center text-green-600 font-medium min-h-[24px]" id="feedback-message">
-          <!-- Feedback will appear here -->
+        <!-- Well Bar (moved here) -->
+        <div class="well-col flex flex-col items-center justify-center h-full">
+          <div class="well-progress" style="position: relative;">
+            <div class="well-fill" id="well-fill-bar" style="width: 0%"></div>
+            <!-- Water can image handled by JS only -->
+          </div>
         </div>
       </div>
       <!-- Power-Ups Row -->
@@ -422,15 +431,15 @@
 
   <!-- Game Mode Selection Modal -->
   <div id="mode-select-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
-    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center relative">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center relative animate-modal-in">
       <button id="close-mode-modal" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl font-bold leading-none focus:outline-none" aria-label="Close">&times;</button>
       <h3 class="text-2xl font-bold mb-6">Choose Game Mode</h3>
       <div class="flex flex-col gap-6">
-        <button id="classic-mode-btn" class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-4 px-6 rounded-lg transition flex flex-col items-center">
+        <button id="classic-mode-btn" class="mode-btn-classic modern-mode-btn flex flex-col items-center">
           <span class="text-lg font-bold mb-1">Classic</span>
           <span class="text-sm text-gray-600">Level-based, no pollutants, 20s timer per level. Fill the well to advance!</span>
         </button>
-        <button id="ultimate-mode-btn" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold py-4 px-6 rounded-lg transition flex flex-col items-center">
+        <button id="ultimate-mode-btn" class="mode-btn-ultimate modern-mode-btn flex flex-col items-center">
           <span class="text-lg font-bold mb-1">Ultimate</span>
           <span class="text-sm text-gray-600">Endless, random power-ups & pollutants, 60s timer. How high can you score?</span>
         </button>

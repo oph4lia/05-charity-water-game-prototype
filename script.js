@@ -4,21 +4,170 @@ console.log('JavaScript file is linked correctly.');
 // Wait until the HTML page is fully loaded
 document.addEventListener('DOMContentLoaded', function () {
   // --- Daily Challenge (Wordle-style) ---
-  // List of 5-letter words related to charity: water's mission
-  const dailyWords = ["water", "clean", "dirty", "human", "wells", "drink", "earth", "thrive", "hope", "girls"];
+  // Expanded word bank: 4, 5, and 6 letter words related to water, charity, and positive impact
+  const dailyWords = {
+    4: [
+      "well", "hope", "give", "flow", "aqua", "life", "help", "care", "pour", "drop", "save", "pure", "wash", "rain", "love"
+    ],
+    5: [
+      "water", "clean", "dirty", "human", "wells", "drink", "earth", "thrive", "girls", "river", "donor", "unity", "smile", "share", "plant", "shine", "build", "teach", "serve", "peace"
+    ],
+    6: [
+      "impact", "change", "donate", "health", "school", "access", "supply", "thirst", "filter", "bucket", "action", "future", "vision", "global", "nature", "stream", "source", "family", "effort", "reward"
+    ]
+  };
   let dailyWord = "";
+  let dailyWordLength = 5;
   let dailyGuesses = [];
   let dailyActive = false;
 
-  // Helper to pick a daily word (could be improved to use the date)
-  function pickDailyWord() {
-    // For simplicity, pick a random word each time (students: you can use the date for a real daily word)
-    return dailyWords[Math.floor(Math.random() * dailyWords.length)];
+  // Daily Challenge Quotes and Words
+  const dailyQuotes = [
+    {
+      quote: "Every $1 invested in clean water can yield $4.30 in economic returns. Access to clean water is perhaps the single most powerful investment for sparking economic growth humanity has ever known.",
+      word: "economic"
+    },
+    {
+      quote: "Every $1 invested in clean water can yield $4.30 in economic returns. Access to clean water is perhaps the single most powerful investment for sparking economic growth humanity has ever known.",
+      word: "growth"
+    },
+    {
+      quote: "Every $1 invested in clean water can yield $4.30 in economic returns. Access to clean water is perhaps the single most powerful investment for sparking economic growth humanity has ever known.",
+      word: "humanity"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "crisis"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "education"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "income"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "dignity"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "health"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "women"
+    },
+    {
+      quote: "Our work to end the water crisis needs your support. You can help provide education, income, dignity, and health — especially for women and children.",
+      word: "children"
+    },
+    {
+      quote: "Thanks to generous private donors who fund our operational expenses, 100% of your donation directly funds clean water projects.",
+      word: "donation"
+    },
+    {
+      quote: "Thanks to generous private donors who fund our operational expenses, 100% of your donation directly funds clean water projects.",
+      word: "funds"
+    },
+    {
+      quote: "Thanks to generous private donors who fund our operational expenses, 100% of your donation directly funds clean water projects.",
+      word: "clean"
+    },
+    {
+      quote: "Thanks to generous private donors who fund our operational expenses, 100% of your donation directly funds clean water projects.",
+      word: "water"
+    },
+    {
+      quote: "Give clean water every month -- A gift of just $20 a month is enough to bring 6 people — an entire family — clean water each year.",
+      word: "gift"
+    },
+    {
+      quote: "Give clean water every month -- A gift of just $20 a month is enough to bring 6 people — an entire family — clean water each year.",
+      word: "family"
+    },
+    {
+      quote: "Start a fundraiser -- Support clean water projects by raising funds for people in need.",
+      word: "need"
+    },
+    {
+      quote: "Start a fundraiser -- Support clean water projects by raising funds for people in need.",
+      word: "fundraiser"
+    },
+    {
+      quote: "Give to a fundraiser -- Support a fundraiser that captures your heart, and you'll show your support for the fundraiser and clean water projects around the world.",
+      word: "heart"
+    },
+    {
+      quote: "Give to a fundraiser -- Support a fundraiser that captures your heart, and you'll show your support for the fundraiser and clean water projects around the world.",
+      word: "support"
+    },
+    {
+      quote: "Plan for legacy giving -- Make a lasting gift to help bring clean water to every person on the planet",
+      word: "legacy"
+    },
+    {
+      quote: "Plan for legacy giving -- Make a lasting gift to help bring clean water to every person on the planet",
+      word: "giving"
+    },
+    {
+      quote: "Plan for legacy giving -- Make a lasting gift to help bring clean water to every person on the planet",
+      word: "planet"
+    },
+    {
+      quote: "Become a brand partner -- work closely with our team to develop initiatives with undeniable impact",
+      word: "initiatives"
+    },
+    {
+      quote: "Become a brand partner -- work closely with our team to develop initiatives with undeniable impact",
+      word: "impact"
+    },
+    {
+      quote: "Honor someone special -- Honor or remember someone special by making a gift in their name.",
+      word: "special"
+    },
+    {
+      quote: "Honor someone special -- Honor or remember someone special by making a gift in their name.",
+      word: "honor"
+    },
+    {
+      quote: "Join Tiny Heroes -- Explore how children can make a difference in the lives of kids around the world with the gift of clean water.",
+      word: "heroes"
+    },
+    {
+      quote: "Join Tiny Heroes -- Explore how children can make a difference in the lives of kids around the world with the gift of clean water.",
+      word: "difference"
+    },
+    {
+      quote: "Join Tiny Heroes -- Explore how children can make a difference in the lives of kids around the world with the gift of clean water.",
+      word: "world"
+    }
+  ];
+
+  // Helper to pick two random quotes and the answer word
+  function pickDailyQuoteAndWord() {
+    // Pick 2 different random indices
+    let idx1 = Math.floor(Math.random() * dailyQuotes.length);
+    let idx2;
+    do {
+      idx2 = Math.floor(Math.random() * dailyQuotes.length);
+    } while (idx2 === idx1);
+    const quoteObjs = [dailyQuotes[idx1], dailyQuotes[idx2]];
+    // Randomly pick one of their words as the answer
+    const answerObj = quoteObjs[Math.floor(Math.random() * 2)];
+    return {
+      quotes: [quoteObjs[0].quote, quoteObjs[1].quote],
+      answer: answerObj.word
+    };
   }
 
   // Show the daily challenge modal
   function showDailyChallenge() {
-    dailyWord = pickDailyWord();
+    // Pick 2 random quotes and the answer word
+    const daily = pickDailyQuoteAndWord();
+    dailyWord = daily.answer;
+    dailyWordLength = dailyWord.length;
     dailyGuesses = [];
     dailyActive = true;
     // Create modal
@@ -28,19 +177,39 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full relative">
         <button class="daily-close-btn absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl font-bold leading-none focus:outline-none" aria-label="Close">&times;</button>
         <h3 class="text-2xl font-bold text-center mb-4">Daily Challenge</h3>
-        <p class="text-gray-600 text-center mb-6">Guess the 5-letter word related to clean water!</p>
+        <p class="text-gray-600 text-center mb-6">Guess the ${dailyWordLength}-letter word from the quotes below!</p>
         <div id="daily-board" class="flex flex-col items-center gap-2 mb-4"></div>
         <div class="flex mb-4">
-          <input type="text" maxlength="5" class="custom-input" id="daily-input" placeholder="Enter 5-letter word..." style="text-transform:uppercase;" />
+          <input type="text" maxlength="${dailyWordLength}" class="custom-input" id="daily-input" placeholder="Enter ${dailyWordLength}-letter word..." style="text-transform:uppercase;" />
           <button class="ml-3 bg-primary text-white px-6 py-2 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="daily-submit-btn">Submit</button>
         </div>
         <div class="text-center text-green-600 font-medium" id="daily-feedback"></div>
         <div class="flex justify-center mt-4">
-          <!-- Close button removed, replaced by × icon -->
+          <button class="bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-200 transition whitespace-nowrap" id="view-quotes-btn">View Quotes</button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
+
+    // View Quotes modal logic
+    modal.querySelector('#view-quotes-btn').onclick = function() {
+      let quoteModal = document.createElement('div');
+      quoteModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+      quoteModal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full relative text-left">
+          <button class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl font-bold leading-none focus:outline-none" aria-label="Close" id="close-quotes-modal">&times;</button>
+          <h4 class="text-xl font-bold mb-4">Quotes</h4>
+          <ul class="space-y-4">
+            <li>“${daily.quotes[0]}”</li>
+            <li>“${daily.quotes[1]}”</li>
+          </ul>
+        </div>
+      `;
+      document.body.appendChild(quoteModal);
+      quoteModal.querySelector('#close-quotes-modal').onclick = function() {
+        document.body.removeChild(quoteModal);
+      };
+    };
 
     function updateBoard() {
       const board = modal.querySelector('#daily-board');
@@ -48,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
       for (let guess of dailyGuesses) {
         let row = document.createElement('div');
         row.className = 'flex gap-1';
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < dailyWordLength; i++) {
           let box = document.createElement('div');
           box.className = 'w-10 h-10 flex items-center justify-center border rounded font-bold text-lg';
           box.textContent = guess.word[i]?.toUpperCase() || '';
@@ -73,18 +242,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const input = modal.querySelector('#daily-input');
       const feedback = modal.querySelector('#daily-feedback');
       let guess = input.value.trim().toLowerCase();
-      if (guess.length !== 5) {
-        feedback.textContent = 'Please enter a 5-letter word.';
-        return;
-      }
-      // Only allow valid words (students: you can add a real dictionary)
-      if (!dailyWords.includes(guess)) {
-        feedback.textContent = 'Not a valid word for this game.';
+      if (guess.length !== dailyWordLength) {
+        feedback.textContent = `Please enter a ${dailyWordLength}-letter word.`;
         return;
       }
       // Check guess
       let result = [];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < dailyWordLength; i++) {
         if (guess[i] === dailyWord[i]) {
           result.push('correct');
         } else if (dailyWord.includes(guess[i])) {
@@ -199,14 +363,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- Well Progress Bar Elements ---
-  // Find the well bar and fill elements on the game screen
-  const wellProgress = document.querySelector('.game-screen .well-progress');
-  const wellFill = document.querySelector('.game-screen .well-fill');
+  // Find the well bar and fill elements on the game screen (now only one well)
+  const wellProgress = document.querySelector('.game-main-row .well-progress');
+  const wellFill = document.querySelector('.game-main-row .well-fill');
 
   // Remove any existing water can image from the well bar
   function removeWaterCanImg() {
     // Remove all water-can-img elements inside the well-progress bar
-    const cans = document.querySelectorAll('.game-screen .well-progress .water-can-img');
+    const cans = document.querySelectorAll('.game-main-row .well-progress .water-can-img');
     cans.forEach(can => can.remove());
   }
 
@@ -312,6 +476,16 @@ document.addEventListener('DOMContentLoaded', function () {
           showClassicLevelCompleteModal();
         }, 800);
       } else {
+        // Only allow pollutant or power-up if there are more puzzles left
+        const nextIndex = getRandomPuzzleIndex();
+        if (nextIndex === null) {
+          // No more puzzles, just end the game
+          setTimeout(() => {
+            setWellProgress(100);
+            endGame('completed');
+          }, 800);
+          return;
+        }
         // 50% chance for power-up, 50% for pollution level
         if (Math.random() < 0.5) {
           giveRandomPowerUp();
@@ -343,6 +517,16 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!gameActive) return;
       timer--;
       updateTimerDisplay();
+      // --- Timer Animations ---
+      if ((gameMode === 'classic' && timer === 10) || (gameMode === 'ultimate' && timer === 30)) {
+        triggerTimerPop();
+      }
+      if (timer === 5) {
+        triggerTimerRedShake();
+      }
+      if (timer === 3 || timer === 2 || timer === 1) {
+        triggerHourglassRain(timer);
+      }
       if (timer <= 0) {
         timer = 0;
         updateTimerDisplay();
@@ -351,7 +535,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 1000);
   }
 
+  function triggerTimerPop() {
+    timerDisplay.classList.remove('timer-pop');
+    void timerDisplay.offsetWidth; // force reflow
+    timerDisplay.classList.add('timer-pop');
+    setTimeout(() => {
+      timerDisplay.classList.remove('timer-pop');
+    }, 800);
+  }
+
+  function triggerTimerRedShake() {
+    timerDisplay.classList.remove('timer-red', 'timer-shake');
+    void timerDisplay.offsetWidth;
+    timerDisplay.classList.add('timer-red', 'timer-shake');
+    setTimeout(() => {
+      timerDisplay.classList.remove('timer-shake');
+    }, 700);
+  }
+
+  function triggerHourglassRain(num) {
+    // Rain multiple hourglass emojis on both sides of the screen
+    for (let side of ['left', 'right']) {
+      for (let i = 0; i < 2; i++) { // 2 per side for more drama
+        const emoji = document.createElement('span');
+        emoji.textContent = '⏳';
+        emoji.className = `hourglass-emoji ${side}`;
+        // Randomize horizontal offset a bit
+        const offset = Math.random() * 1.5;
+        if (side === 'left') emoji.style.left = `calc(2vw + ${offset}vw)`;
+        if (side === 'right') emoji.style.right = `calc(2vw + ${offset}vw)`;
+        // Randomize animation delay for natural effect
+        emoji.style.animationDelay = `${Math.random() * 0.2}s`;
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 1200);
+      }
+    }
+  }
+
   function updateTimerDisplay() {
+    // Remove red color if not at 5s or below
+    if (timer > 5) timerDisplay.classList.remove('timer-red');
     // Format as M:SS
     const minutes = Math.floor(timer / 60);
     const seconds = timer % 60;
@@ -402,9 +625,70 @@ document.addEventListener('DOMContentLoaded', function () {
       showScreen('start');
     } else {
       feedbackMessage.textContent = 'Time is up!';
+      showTimeUpOverlay();
       // Optionally, show game over screen here
     }
   }
+
+  function showTimeUpOverlay() {
+    // Remove any existing overlay
+    const old = document.querySelector('.timeup-overlay');
+    if (old) old.remove();
+    const overlay = document.createElement('div');
+    overlay.className = 'timeup-overlay';
+    overlay.innerHTML = `<div class="timeup-text">Time is up!</div>`;
+    document.body.appendChild(overlay);
+    // After animation, show modal
+    setTimeout(() => {
+      overlay.remove();
+      showTimeUpModal();
+    }, 2200);
+  }
+
+  function showTimeUpModal() {
+    // Remove any existing modal
+    const old = document.querySelector('.timeup-modal');
+    if (old) old.remove();
+    const modal = document.createElement('div');
+    modal.className = 'timeup-modal fixed inset-0 flex items-center justify-center z-[9999]';
+    modal.innerHTML = `
+      <div class="bg-white bg-opacity-90 rounded-xl shadow-xl p-8 max-w-xs w-full flex flex-col items-center">
+        <h3 class="text-2xl font-bold mb-4 text-red-600">Time is up!</h3>
+        <div class="mb-6 text-lg font-semibold text-gray-700">Score: <span id="timeup-score">${score}</span></div>
+        <div class="flex flex-col gap-4 w-full">
+          <button class="bg-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 transition" id="timeup-tryagain-btn">Try Again</button>
+          <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-200 transition" id="timeup-exit-btn">Exit Game</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    // Try Again: restart game in current mode
+    document.getElementById('timeup-tryagain-btn').onclick = function() {
+      modal.remove();
+      startGame(gameMode);
+      showScreen('game');
+    };
+    // Exit: return to start screen
+    document.getElementById('timeup-exit-btn').onclick = function() {
+      modal.remove();
+      showScreen('start');
+    };
+  }
+
+  // Remove overlay on new game or screen change
+  const originalStartGame = startGame;
+  startGame = function(...args) {
+    const old = document.querySelector('.timeup-overlay');
+    if (old) old.remove();
+    originalStartGame.apply(this, args);
+  };
+  // Only declare originalShowScreen once, and add overlay removal logic here
+  const originalShowScreen = showScreen;
+  showScreen = function(...args) {
+    const old = document.querySelector('.timeup-overlay');
+    if (old) old.remove();
+    originalShowScreen.apply(this, args);
+  };
 
   // Show the level complete modal in classic mode
   function showClassicLevelCompleteModal() {
@@ -563,7 +847,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('restart-btn').addEventListener('click', () => {
     document.querySelector('.pause-menu').style.display = 'none';
     showScreen('game');
-    startGame(); // This resets timer, score, and picks a new puzzle
+    startGame(gameMode); // Use the current mode to reset timer correctly
   });
 
   // How to Play button: go to how-to-play screen from pause menu
@@ -640,7 +924,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Show/hide close icon when switching screens
-  const originalShowScreen = showScreen;
   showScreen = function(screenName) {
     originalShowScreen(screenName);
     if (screenName === 'howToPlay') {
@@ -667,10 +950,11 @@ document.addEventListener('DOMContentLoaded', function () {
     impactCard.onclick = showImpactConfirm;
   }
 
-  document.getElementById('lets-go-btn').addEventListener('click', () => {
-    showScreen('game');
-    startGame();
-  });
+  // Remove the lets-go-btn event listener
+  // document.getElementById('lets-go-btn').addEventListener('click', () => {
+  //   showScreen('game');
+  //   startGame();
+  // });
 
   document.getElementById('return-menu-btn').addEventListener('click', () => {
     showScreen('start');
@@ -730,16 +1014,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- Well Progress Bar Styles ---
-  // Make the well bar vertical
-  if (wellProgress && wellFill) {
-    wellProgress.style.width = '32px';
-    wellProgress.style.height = '120px';
-    wellProgress.style.display = 'flex';
-    wellProgress.style.flexDirection = 'column-reverse';
-    wellFill.style.width = '100%';
-    wellFill.style.height = '0%';
-    wellFill.style.transition = 'height 0.5s cubic-bezier(0.4,0,0.2,1)';
-  }
+  // Remove the code that sets styles for the old header well bar
 
   // --- Power-Up UI ---
   // Show the number of each power-up (students: you can improve this UI!)
@@ -789,66 +1064,181 @@ document.addEventListener('DOMContentLoaded', function () {
   // Show the pollution challenge overlay
   function triggerPollutionLevel() {
     if (gameMode === 'classic') return; // No pollutant in classic mode
-    // Pick a random puzzle
-    const idx = getRandomPuzzleIndex();
-    if (idx === null) return; // fallback
-    const puzzle = puzzleBank[idx];
-    // Scramble the sentence
-    const scrambled = scrambleSentence(puzzle.sentence);
-    // Show the overlay
-    const overlay = document.querySelector('.pollutant-challenge');
-    overlay.style.display = 'flex';
-    // Set the scrambled puzzle text
-    const puzzleText = overlay.querySelector('#pollutant-puzzle-text');
-    puzzleText.textContent = scrambled;
-    // Clear previous feedback
-    overlay.querySelector('#pollutant-feedback-message').textContent = '';
-    // Set up timer (15 seconds)
-    let polluteTime = 15;
-    const polluteTimer = overlay.querySelector('#pollutant-timer');
-    polluteTimer.textContent = `0:${polluteTime < 10 ? '0' : ''}${polluteTime}`;
-    let polluteInterval = setInterval(() => {
-      polluteTime--;
+    // Pause main game timer
+    const prevGameActive = gameActive;
+    gameActive = false;
+    clearInterval(timerInterval);
+    showPollutantCascade(() => {
+      showPollutantGlow();
+      // Pick a random puzzle
+      const idx = getRandomPuzzleIndex();
+      if (idx === null) return; // fallback
+      const puzzle = puzzleBank[idx];
+      // Scramble the sentence
+      let unscrambled = puzzle.sentence;
+      let scrambled = scrambleSentence(puzzle.sentence);
+      let isUnscrambled = false;
+      // Show the overlay
+      const overlay = document.querySelector('.pollutant-challenge');
+      overlay.style.display = 'flex';
+      overlay.classList.remove('pollutant-fadein');
+      void overlay.offsetWidth;
+      overlay.classList.add('pollutant-fadein');
+      // Set the scrambled puzzle text
+      const puzzleText = overlay.querySelector('#pollutant-puzzle-text');
+      puzzleText.textContent = scrambled;
+      // Clear previous feedback
+      overlay.querySelector('#pollutant-feedback-message').textContent = '';
+      // Set up timer (15 seconds)
+      let polluteTime = 15;
+      const polluteTimer = overlay.querySelector('#pollutant-timer');
       polluteTimer.textContent = `0:${polluteTime < 10 ? '0' : ''}${polluteTime}`;
-      if (polluteTime <= 0) {
-        clearInterval(polluteInterval);
-        overlay.querySelector('#pollutant-feedback-message').textContent = 'Time is up!';
-        setTimeout(() => { overlay.style.display = 'none'; }, 1200);
+      let polluteInterval = setInterval(() => {
+        polluteTime--;
+        polluteTimer.textContent = `0:${polluteTime < 10 ? '0' : ''}${polluteTime}`;
+        if (polluteTime <= 0) {
+          clearInterval(polluteInterval);
+          overlay.querySelector('#pollutant-feedback-message').textContent = 'Time is up! -10s';
+          // Show bacteria and popup
+          showBacteriaAnimation();
+          showPollutantPopup('The water has been polluted! You have lost 10 seconds cleaning out the well!');
+          setTimeout(() => {
+            overlay.style.display = 'none';
+            removePollutantGlow();
+            // Penalize: subtract 10s from main timer, clamp to 0
+            timer = Math.max(0, timer - 10);
+            updateTimerDisplay();
+            // Animate timer deduction (after modal is gone)
+            timerDisplay.classList.add('timer-deduct');
+            setTimeout(() => timerDisplay.classList.remove('timer-deduct'), 1200);
+            // Resume main game
+            gameActive = prevGameActive;
+            if (gameActive) startTimer();
+          }, 2200);
+        }
+      }, 1000);
+      // Handle answer submission
+      function checkPollutantAnswer() {
+        const userAnswer = overlay.querySelector('#pollutant-answer-input').value.trim().toLowerCase();
+        const correctAnswer = puzzle.answer.toLowerCase();
+        if (userAnswer === correctAnswer) {
+          overlay.querySelector('#pollutant-feedback-message').textContent = 'Correct! You cleared the pollution!';
+          clearInterval(polluteInterval);
+          // Mark puzzle as completed
+          usedPuzzleIndexes.push(idx);
+          // Show yellow glow and popup
+          showYellowGlow();
+          showPollutantPopup(getRandomCongratsPhrase());
+          setTimeout(() => {
+            overlay.style.display = 'none';
+            removePollutantGlow();
+            // Increment well progress
+            incrementWellProgress();
+            // Resume main game
+            gameActive = prevGameActive;
+            if (gameActive) startTimer();
+          }, 1500);
+        } else {
+          overlay.querySelector('#pollutant-feedback-message').textContent = 'Try again!';
+        }
       }
-    }, 1000);
+      overlay.querySelector('#pollutant-submit-answer-btn').onclick = checkPollutantAnswer;
+      overlay.querySelector('#pollutant-answer-input').onkeydown = function(e) {
+        if (e.key === 'Enter') checkPollutantAnswer();
+      };
+      // Purify button logic (only in this modal)
+      overlay.querySelector('#pollutant-purify-btn').onclick = function() {
+        if (powerUps.purify > 0) {
+          powerUps.purify--;
+          updatePowerUpUI();
+          // Unscramble the sentence, but user must still guess
+          isUnscrambled = true;
+          puzzleText.textContent = unscrambled;
+          puzzleText.classList.remove('unscramble-animate');
+          void puzzleText.offsetWidth;
+          puzzleText.classList.add('unscramble-animate');
+          overlay.querySelector('#pollutant-feedback-message').textContent = 'Purify used! The sentence is unscrambled.';
+        } else {
+          overlay.querySelector('#pollutant-feedback-message').textContent = 'No Purify power-up available!';
+        }
+      };
+      // Update purify count in modal
+      const purifyCount = overlay.querySelector('#purify-count');
+      if (purifyCount) purifyCount.textContent = powerUps.purify;
+    }, 1200); // Show modal after 1.2s for overlap
+  }
 
-    // Handle answer submission
-    function checkPollutantAnswer() {
-      const userAnswer = overlay.querySelector('#pollutant-answer-input').value.trim().toLowerCase();
-      const correctAnswer = puzzle.answer.toLowerCase();
-      if (userAnswer === correctAnswer) {
-        overlay.querySelector('#pollutant-feedback-message').textContent = 'Correct! You cleared the pollution!';
-        clearInterval(polluteInterval);
-        setTimeout(() => { overlay.style.display = 'none'; }, 1200);
-      } else {
-        overlay.querySelector('#pollutant-feedback-message').textContent = 'Try again!';
-      }
+  function showPollutantCascade(callback, delay = 1600) {
+    // Remove any existing cascade
+    const old = document.querySelector('.pollutant-cascade');
+    if (old) old.remove();
+    const cascade = document.createElement('div');
+    cascade.className = 'pollutant-cascade';
+    document.body.appendChild(cascade);
+    setTimeout(() => {
+      cascade.remove();
+      if (typeof callback === 'function') callback();
+    }, delay);
+  }
+
+  function showPollutantGlow() {
+    // Remove any existing glow
+    const old = document.querySelector('.pollutant-glow');
+    if (old) old.remove();
+    const glow = document.createElement('div');
+    glow.className = 'pollutant-glow';
+    document.body.appendChild(glow);
+  }
+  function removePollutantGlow() {
+    const old = document.querySelector('.pollutant-glow');
+    if (old) old.remove();
+  }
+
+  function showYellowGlow() {
+    const old = document.querySelector('.pollutant-yellow-glow');
+    if (old) old.remove();
+    const glow = document.createElement('div');
+    glow.className = 'pollutant-yellow-glow';
+    document.body.appendChild(glow);
+    setTimeout(() => glow.remove(), 1200);
+  }
+
+  function showPollutantPopup(text) {
+    const old = document.querySelector('.pollutant-popup');
+    if (old) old.remove();
+    const popup = document.createElement('div');
+    popup.className = 'pollutant-popup';
+    popup.textContent = text;
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 1800);
+  }
+
+  function showBacteriaAnimation() {
+    // Use emoji for bacteria for simplicity
+    const bacteriaEmojis = ['🦠','🧫','🧬'];
+    for (let i = 0; i < 6; i++) {
+      const bac = document.createElement('div');
+      bac.className = 'pollutant-bacteria';
+      bac.textContent = bacteriaEmojis[Math.floor(Math.random()*bacteriaEmojis.length)];
+      bac.style.left = `${10 + Math.random()*80}vw`;
+      bac.style.top = `${60 + Math.random()*20}vh`;
+      bac.style.fontSize = `${2.2 + Math.random()}rem`;
+      document.body.appendChild(bac);
+      setTimeout(() => bac.remove(), 2200);
     }
-    overlay.querySelector('#pollutant-submit-answer-btn').onclick = checkPollutantAnswer;
-    overlay.querySelector('#pollutant-answer-input').onkeydown = function(e) {
-      if (e.key === 'Enter') checkPollutantAnswer();
-    };
+  }
 
-    // Purify button logic (only in this modal)
-    overlay.querySelector('#pollutant-purify-btn').onclick = function() {
-      if (powerUps.purify > 0) {
-        powerUps.purify--;
-        updatePowerUpUI();
-        overlay.querySelector('#pollutant-feedback-message').textContent = 'Purify used! Pollution removed.';
-        clearInterval(polluteInterval);
-        setTimeout(() => { overlay.style.display = 'none'; }, 1200);
-      } else {
-        overlay.querySelector('#pollutant-feedback-message').textContent = 'No Purify power-up available!';
-      }
-    };
-    // Update purify count in modal
-    const purifyCount = overlay.querySelector('#purify-count');
-    if (purifyCount) purifyCount.textContent = powerUps.purify;
+  function getRandomCongratsPhrase() {
+    const phrases = [
+      'You purified the water! 💧',
+      'Clean again! Great job! 🌟',
+      'No more pollution! 🙌',
+      'Crystal clear! ✨',
+      'You saved the well! 🫧',
+      'Water is safe again! 🎉',
+      'Pollution defeated! 🎉'
+    ];
+    return phrases[Math.floor(Math.random()*phrases.length)];
   }
 
   // --- Power-Up Button Listeners ---
