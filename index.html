@@ -39,7 +39,7 @@
 <body class="min-h-screen">
 
   <!-- Splash Screen -->
-  <div class="splash-screen active flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white relative">
+  <div class="splash-screen active flex-center-col min-h-screen bg-gradient-to-b from-blue-50 to-white relative">
     <div class="relative mb-8">
       <div class="text-6xl font-['Pacifico'] text-primary mb-2">Wordlingo</div>
       <div class="absolute -right-4 -top-4 w-8 h-8 flex items-center justify-center">
@@ -55,7 +55,7 @@
   </div>
 
   <!-- Start Screen -->
-  <div class="start-screen min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-blue-50 to-white relative overflow-hidden">
+  <div class="start-screen min-h-screen flex-center-col px-4 bg-gradient-to-b from-blue-50 to-white relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
       <div class="water-drops"></div>
     </div>
@@ -113,15 +113,8 @@
 
   <!-- How to Play Screen -->
   <div class="how-to-play-screen min-h-screen flex flex-col">
-    <div class="p-4">
-      <button class="flex items-center text-gray-700 hover:text-primary transition" id="back-to-start-btn">
-        <div class="w-6 h-6 flex items-center justify-center mr-1">
-          <i class="ri-arrow-left-line"></i>
-        </div>
-        Back
-      </button>
-    </div>
-    <div class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+    <!-- Removed Back button -->
+    <div class="flex-1 flex-center-col px-4 py-8">
       <h2 class="text-3xl font-bold mb-12">How to Play</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full mb-12">
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
@@ -187,7 +180,7 @@
           <!-- Desktop: Wordlingo text and icon -->
           <span class="hidden sm:flex items-center">
             <span class="text-3xl font-['Pacifico'] text-primary mr-4 wordlingo-desktop">Wordlingo</span>
-            <span class="w-6 h-6 flex items-center justify-center mr-2">
+            <span class="w-6 h-6 flex items-center justify-center mr-2" style="display: none;">
               <i class="ri-water-flash-line text-primary"></i>
             </span>
           </span>
@@ -220,7 +213,7 @@
         </div>
       </div>
     </div>
-    <div class="flex-1 flex flex-col items-center justify-center px-2 py-4 sm:px-4 sm:py-8">
+    <div class="flex-1 flex-center-col px-2 py-4 sm:px-4 sm:py-8">
       <!-- Puzzle Card -->
       <div class="w-full max-w-md bg-white rounded-xl shadow-md p-6 sm:p-8 mb-6 sm:mb-8" style="box-sizing: border-box;">
         <h2 class="text-lg sm:text-2xl font-semibold mb-4 sm:mb-6 text-left sm:text-center">Fill in the blank:</h2>
@@ -332,7 +325,7 @@
   </div>
 
   <!-- Game Over Screen -->
-  <div class="game-over-screen min-h-screen flex flex-col items-center justify-center px-4 py-8">
+  <div class="game-over-screen min-h-screen flex-center-col px-4 py-8">
     <div class="max-w-lg w-full text-center">
       <h2 class="text-4xl font-bold mb-2">Well Done!</h2>
       <p class="text-gray-600 mb-8">You've completed the challenge!</p>
@@ -360,7 +353,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+      <div class="button-group mb-8">
         <button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="play-again-btn">
           Play Again
         </button>
@@ -409,14 +402,14 @@
   </div>
 
   <!-- Error Screen -->
-  <div class="error-screen min-h-screen flex flex-col items-center justify-center px-4">
+  <div class="error-screen min-h-screen flex-center-col px-4">
     <div class="max-w-md w-full text-center">
       <div class="w-20 h-20 flex items-center justify-center bg-red-100 rounded-full mx-auto mb-6 text-red-600">
         <i class="ri-error-warning-line ri-2x"></i>
       </div>
       <h2 class="text-2xl font-bold mb-4">Something went wrong</h2>
       <p class="text-gray-600 mb-8">We're having trouble loading the game. Please try again.</p>
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <div class="button-group">
         <button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="retry-btn">
           Retry
         </button>
@@ -426,6 +419,27 @@
       </div>
     </div>
   </div>
+
+  <!-- Game Mode Selection Modal -->
+  <div id="mode-select-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center relative">
+      <button id="close-mode-modal" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl font-bold leading-none focus:outline-none" aria-label="Close">&times;</button>
+      <h3 class="text-2xl font-bold mb-6">Choose Game Mode</h3>
+      <div class="flex flex-col gap-6">
+        <button id="classic-mode-btn" class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-4 px-6 rounded-lg transition flex flex-col items-center">
+          <span class="text-lg font-bold mb-1">Classic</span>
+          <span class="text-sm text-gray-600">Level-based, no pollutants, 20s timer per level. Fill the well to advance!</span>
+        </button>
+        <button id="ultimate-mode-btn" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold py-4 px-6 rounded-lg transition flex flex-col items-center">
+          <span class="text-lg font-bold mb-1">Ultimate</span>
+          <span class="text-sm text-gray-600">Endless, random power-ups & pollutants, 60s timer. How high can you score?</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Play Screen Close Icon -->
+  <button id="close-how-to-play" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl font-bold leading-none focus:outline-none z-20" aria-label="Close" style="display:none;">&times;</button>
 
   <script src="script.js"></script>
 </body>

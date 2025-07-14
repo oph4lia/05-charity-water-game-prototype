@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     modal.innerHTML = `
-      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full relative">
+        <button class="daily-close-btn absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl font-bold leading-none focus:outline-none" aria-label="Close">&times;</button>
         <h3 class="text-2xl font-bold text-center mb-4">Daily Challenge</h3>
         <p class="text-gray-600 text-center mb-6">Guess the 5-letter word related to clean water!</p>
         <div id="daily-board" class="flex flex-col items-center gap-2 mb-4"></div>
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
         <div class="text-center text-green-600 font-medium" id="daily-feedback"></div>
         <div class="flex justify-center mt-4">
-          <button class="bg-gray-100 text-gray-700 font-semibold py-2 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="daily-close-btn">Close</button>
+          <!-- Close button removed, replaced by × icon -->
         </div>
       </div>
     `;
@@ -112,7 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.querySelector('#daily-input').onkeydown = function(e) {
       if (e.key === 'Enter') checkDailyGuess();
     };
-    modal.querySelector('#daily-close-btn').onclick = function() {
+    // Daily modal close icon
+    modal.querySelector('.daily-close-btn').onclick = function() {
       document.body.removeChild(modal);
       dailyActive = false;
     };
@@ -220,8 +222,6 @@ document.addEventListener('DOMContentLoaded', function () {
     can.alt = 'Water Can';
     can.className = 'water-can-img';
     can.style.position = 'absolute';
-    can.style.width = '48px';
-    can.style.height = '48px';
     can.style.opacity = '0';
     can.style.transform = 'rotate(-30deg) scale(1.2)';
     can.style.transition = 'opacity 0.3s, top 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1)';
@@ -233,7 +233,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const barRect = wellProgress.getBoundingClientRect();
     const containerRect = wellBarContainer.getBoundingClientRect();
     const barHeight = barRect.height;
-    const canHeight = 48; // px
+    const canHeight = Math.min(48, barHeight * 0.4); // Responsive can height
+    can.style.width = `${canHeight}px`;
+    can.style.height = `${canHeight}px`;
+    
     // The can should animate from the current fill position to the new fill position
     const percent = Math.max(0, Math.min(100, wellProgressPercent));
     const barTopInContainer = barRect.top - containerRect.top;
@@ -245,8 +248,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const startTop = barTopInContainer + (barHeight - canHeight) * (1 - prevPercent / 100);
     // End at the new fill position
     const endTop = barTopInContainer + (barHeight - canHeight) * (1 - percent / 100);
-    // Place the can closer to the bar (overlapping by 8px)
-    const canLeft = barLeftInContainer + wellProgress.offsetWidth - 8;
+    // Place the can closer to the bar (overlapping by responsive amount)
+    const overlap = Math.min(8, wellProgress.offsetWidth * 0.25);
+    const canLeft = barLeftInContainer + wellProgress.offsetWidth - overlap;
 
     // Set initial position (before fade in)
     can.style.left = `${canLeft}px`;
@@ -300,18 +304,27 @@ document.addEventListener('DOMContentLoaded', function () {
     showWaterCanAtEnd();
     // If the well is now full, trigger a random event and reset the well
     if (wellProgressPercent >= 100) {
-      // 50% chance for power-up, 50% for pollution level
-      if (Math.random() < 0.5) {
-        giveRandomPowerUp();
+      if (gameMode === 'classic') {
+        // Pause the timer and game while modal is up
+        gameActive = false;
+        clearInterval(timerInterval);
+        setTimeout(() => {
+          showClassicLevelCompleteModal();
+        }, 800);
       } else {
-        triggerPollutionLevel();
+        // 50% chance for power-up, 50% for pollution level
+        if (Math.random() < 0.5) {
+          giveRandomPowerUp();
+        } else {
+          triggerPollutionLevel();
+        }
+        // Reset the well so the user has to fill it again
+        setTimeout(() => {
+          wellProgressPercent = 0;
+          setWellProgress(wellProgressPercent);
+          removeWaterCanImg();
+        }, 1200); // Wait for the water can animation to finish
       }
-      // Reset the well so the user has to fill it again
-      setTimeout(() => {
-        wellProgressPercent = 0;
-        setWellProgress(wellProgressPercent);
-        removeWaterCanImg();
-      }, 1200); // Wait for the water can animation to finish
     }
   }
 
@@ -352,9 +365,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- Game Control Functions ---
-  function startGame() {
+  function startGame(mode = 'ultimate') {
     score = 0;
-    timer = 60;
+    classicLevel = 1;
+    if (mode === 'classic') {
+      timer = 20;
+    } else {
+      timer = 60;
+    }
     gameActive = true;
     usedPuzzleIndexes = [];
     // Randomize maxWellProgress between 2 and 4 (inclusive) at the start of each game
@@ -369,6 +387,9 @@ document.addEventListener('DOMContentLoaded', function () {
     showPuzzle(currentPuzzleIndex);
     resetWellProgress(); // Reset the well bar at the start
     startTimer();
+    
+    // Check logo overflow after game starts
+    setTimeout(checkLogoOverflow, 200);
   }
 
   function endGame(reason) {
@@ -377,10 +398,49 @@ document.addEventListener('DOMContentLoaded', function () {
     // If reason is 'completed', show a congratulatory modal
     if (reason === 'completed') {
       showCompletionModal();
+    } else if (reason === 'classic-exit') {
+      showScreen('start');
     } else {
       feedbackMessage.textContent = 'Time is up!';
       // Optionally, show game over screen here
     }
+  }
+
+  // Show the level complete modal in classic mode
+  function showClassicLevelCompleteModal() {
+    // Create modal overlay
+    let modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center relative">
+        <h3 class="text-2xl font-bold mb-4">Level ${classicLevel} Complete!</h3>
+        <p class="text-gray-700 mb-6">You filled the well!<br>Score: <span class="font-semibold">${score}</span></p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-2">
+          <button class="bg-primary text-white font-semibold py-3 px-6 !rounded-button hover:bg-blue-600 transition whitespace-nowrap" id="classic-continue-btn">Continue</button>
+          <button class="bg-gray-100 text-gray-700 font-semibold py-3 px-6 !rounded-button hover:bg-gray-200 transition whitespace-nowrap" id="classic-exit-btn">Exit</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Continue: reset well, timer, resume game
+    document.getElementById('classic-continue-btn').onclick = function() {
+      document.body.removeChild(modal);
+      classicLevel++;
+      timer = 20;
+      wellProgressPercent = 0;
+      setWellProgress(wellProgressPercent);
+      removeWaterCanImg();
+      updateTimerDisplay();
+      gameActive = true;
+      startTimer();
+    };
+
+    // Exit: end game
+    document.getElementById('classic-exit-btn').onclick = function() {
+      document.body.removeChild(modal);
+      endGame('classic-exit');
+    };
   }
 
   // Show a congratulatory modal when all puzzles are completed
@@ -522,6 +582,11 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
       screens[screenName].classList.add('active');
     }, 0);
+    
+    // Check logo overflow when showing game screen
+    if (screenName === 'game') {
+      setTimeout(checkLogoOverflow, 100);
+    }
   }
 
   // Function to start the game by showing the splash, then start screen
@@ -537,9 +602,54 @@ document.addEventListener('DOMContentLoaded', function () {
   // --- Title Screen Button Event Listeners ---
   // Start Game
   document.getElementById('start-game-btn').addEventListener('click', () => {
-    showScreen('game');
-    startGame();
+    // Show the mode selection modal
+    document.getElementById('mode-select-modal').style.display = 'flex';
   });
+
+  // Mode selection modal logic
+  let gameMode = 'ultimate'; // default
+  let classicLevel = 1;
+  document.getElementById('classic-mode-btn').addEventListener('click', () => {
+    gameMode = 'classic';
+    document.getElementById('mode-select-modal').style.display = 'none';
+    showScreen('game');
+    startGame('classic');
+  });
+  document.getElementById('ultimate-mode-btn').addEventListener('click', () => {
+    gameMode = 'ultimate';
+    document.getElementById('mode-select-modal').style.display = 'none';
+    showScreen('game');
+    startGame('ultimate');
+  });
+  document.getElementById('close-mode-modal').addEventListener('click', () => {
+    document.getElementById('mode-select-modal').style.display = 'none';
+  });
+
+  // How to Play close icon logic
+  const closeHowToPlayBtn = document.getElementById('close-how-to-play');
+  function showHowToPlayCloseIcon(show) {
+    if (show) {
+      closeHowToPlayBtn.style.display = 'block';
+    } else {
+      closeHowToPlayBtn.style.display = 'none';
+    }
+  }
+  closeHowToPlayBtn.addEventListener('click', () => {
+    showHowToPlayCloseIcon(false);
+    showScreen('start');
+  });
+
+  // Show/hide close icon when switching screens
+  const originalShowScreen = showScreen;
+  showScreen = function(screenName) {
+    originalShowScreen(screenName);
+    if (screenName === 'howToPlay') {
+      showHowToPlayCloseIcon(true);
+    } else {
+      showHowToPlayCloseIcon(false);
+    }
+  };
+
   // How to Play
   document.getElementById('how-to-play-btn').addEventListener('click', () => {
     showScreen('howToPlay');
@@ -556,10 +666,6 @@ document.addEventListener('DOMContentLoaded', function () {
     impactCard.style.cursor = 'pointer';
     impactCard.onclick = showImpactConfirm;
   }
-
-  document.getElementById('back-to-start-btn').addEventListener('click', () => {
-    showScreen('start');
-  });
 
   document.getElementById('lets-go-btn').addEventListener('click', () => {
     showScreen('game');
@@ -682,6 +788,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Show the pollution challenge overlay
   function triggerPollutionLevel() {
+    if (gameMode === 'classic') return; // No pollutant in classic mode
     // Pick a random puzzle
     const idx = getRandomPuzzleIndex();
     if (idx === null) return; // fallback
@@ -777,6 +884,64 @@ document.addEventListener('DOMContentLoaded', function () {
       feedbackMessage.textContent = 'Use Purify during a pollution challenge!';
     };
   }
+
+  // Function to check if the logo would overflow and switch to droplet if needed
+  function checkLogoOverflow() {
+    const logoElement = document.querySelector('.wordlingo-desktop');
+    const headerContainer = document.querySelector('.game-screen .max-w-4xl');
+    const dropletContainer = document.querySelector('.game-screen .hidden.sm\\:flex.items-center span:last-child');
+    
+    if (!logoElement || !headerContainer) return;
+    
+    // Check if the logo would cause horizontal overflow
+    const logoRect = logoElement.getBoundingClientRect();
+    const containerRect = headerContainer.getBoundingClientRect();
+    const logoWidth = logoRect.width;
+    const availableWidth = containerRect.width * 0.25; // Reserve 25% of header width for logo
+    
+    if (logoWidth > availableWidth) {
+      // Hide the text logo and show droplet
+      logoElement.style.opacity = '0';
+      setTimeout(() => {
+        logoElement.style.display = 'none';
+      }, 300);
+      
+      if (dropletContainer) {
+        dropletContainer.style.display = 'flex';
+        dropletContainer.style.fontSize = '1.5rem';
+        dropletContainer.style.width = 'auto';
+        dropletContainer.style.height = 'auto';
+        dropletContainer.style.padding = '0.5rem';
+        dropletContainer.style.borderRadius = '50%';
+        dropletContainer.style.backgroundColor = 'rgba(31, 182, 255, 0.1)';
+        dropletContainer.style.transition = 'all 0.3s ease';
+        dropletContainer.style.opacity = '0';
+        setTimeout(() => {
+          dropletContainer.style.opacity = '1';
+        }, 50);
+      }
+    } else {
+      // Show the text logo and hide droplet
+      if (dropletContainer) {
+        dropletContainer.style.opacity = '0';
+        setTimeout(() => {
+          dropletContainer.style.display = 'none';
+        }, 300);
+      }
+      
+      logoElement.style.display = 'inline-block';
+      setTimeout(() => {
+        logoElement.style.opacity = '1';
+      }, 50);
+    }
+  }
+
+  // Add resize listener to check logo overflow on window resize
+  window.addEventListener('resize', () => {
+    if (document.querySelector('.game-screen.active')) {
+      checkLogoOverflow();
+    }
+  });
 
   // Start the game when the page loads
   initializeGame();

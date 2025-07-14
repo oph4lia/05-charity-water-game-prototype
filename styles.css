@@ -22,6 +22,29 @@ Secondary Colors:
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #f9fafb;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Responsive viewport adjustments */
+html {
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1200px) {
+  html {
+    font-size: 18px;
+  }
 }
 
 /* Animations */
@@ -89,91 +112,171 @@ body {
   }
 }
 
-/* Splash and Start screens */
-
-
-
-.splash-screen, .start-screen {
+/* Responsive screen layouts */
+.splash-screen, .start-screen, .how-to-play-screen, .game-screen, .game-over-screen, .error-screen {
   position: fixed;
   inset: 0;
   display: flex;
+  flex-direction: column;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease-in-out;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 
-/* Make the pause button more prominent */
-#pause-btn {
-  width: 48px !important;
-  height: 48px !important;
-  background: #e0f2fe;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(31,182,255,0.12);
-  display: flex;
+.splash-screen.active, .start-screen.active, .how-to-play-screen.active, .game-screen.active, .game-over-screen.active, .error-screen.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Splash screen responsive layout */
+.splash-screen {
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
-}
-#pause-btn:hover {
-  background: #bae6fd;
-  box-shadow: 0 4px 16px rgba(31,182,255,0.18);
-  transform: scale(1.08);
-  color: #1fb6ff;
+  padding: clamp(1rem, 4vw, 2rem);
 }
 
+.splash-screen .text-6xl {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+}
 
+/* Start screen responsive layout */
+.start-screen {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2rem);
+}
 
-/* Fix for Wordlingo text cut-off on desktop (vertical alignment and truncation) */
-.wordlingo-desktop {
+.start-screen h1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+}
+
+.start-screen h2 {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+.start-screen p {
+  font-size: clamp(0.875rem, 3vw, 1.125rem);
+}
+
+.start-screen .grid {
+  gap: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: clamp(2rem, 6vw, 3rem);
+}
+
+.start-screen button {
+  font-size: clamp(0.875rem, 3vw, 1rem);
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+/* How to play screen responsive layout */
+.how-to-play-screen {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.how-to-play-screen h2 {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  margin-bottom: clamp(2rem, 6vw, 3rem);
+}
+
+.how-to-play-screen .grid {
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-bottom: clamp(2rem, 6vw, 3rem);
+}
+
+/* Game screen responsive layout */
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.game-screen .bg-white {
+  flex-shrink: 0;
+  padding: clamp(0.5rem, 2vw, 1rem);
+}
+
+.game-screen .flex-1 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Game header responsive */
+.game-screen .max-w-4xl {
+  max-width: min(95vw, 1200px);
+  width: 100%;
+}
+
+.game-screen .wordlingo-desktop {
+  font-size: clamp(1.25rem, 4vw, 1.875rem);
   line-height: 1.15;
-  padding-bottom: 11px;
+  padding-bottom: 0.25rem;
   display: inline-block;
   vertical-align: middle;
   max-width: 10ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: opacity 0.3s ease;
 }
 
-.splash-screen.active, .start-screen.active {
-  opacity: 1;
-  pointer-events: auto;
+/* Logo replacement droplet styling */
+.game-screen .ri-water-flash-line {
+  transition: all 0.3s ease;
 }
 
-/* Loading droplet animation */
-.loading-droplet {
-  width: 40px;
-  height: 40px;
-  border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
-  background-color: #1fb6ff;
-  animation: droplet 1.5s infinite;
+.game-screen .ri-water-flash-line.parent-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
-@keyframes droplet {
-  0% {
-    transform: rotate(-45deg) translateY(0);
-    opacity: 0.7;
-  }
-  50% {
-    transform: rotate(-45deg) translateY(-20px);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(-45deg) translateY(0);
-    opacity: 0.7;
-  }
+/* Game content responsive */
+.game-screen .max-w-md {
+  max-width: min(95vw, 28rem);
+  width: 100%;
 }
 
-/* Well progress bar - vertical version */
+.game-screen .text-lg {
+  font-size: clamp(0.875rem, 3vw, 1.125rem);
+}
+
+.game-screen .text-2xl {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.game-screen .text-xl {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+}
+
+/* Power-ups responsive */
+.game-screen .gap-4 {
+  gap: clamp(0.5rem, 2vw, 1rem);
+}
+
+.game-screen .power-up-btn {
+  width: clamp(3rem, 8vw, 3.75rem);
+  height: clamp(3rem, 8vw, 3.75rem);
+}
+
+/* Well progress bar responsive */
 .well-progress {
-  width: 32px !important;
-  height: 120px !important;
+  width: clamp(1.5rem, 4vw, 2rem) !important;
+  height: clamp(4rem, 12vw, 7.5rem) !important;
   background: #e0e0e0;
-  border-radius: 16px;
+  border-radius: clamp(0.5rem, 2vw, 1rem);
   overflow: hidden;
-  margin: 0 12px 0 0;
+  margin: 0 clamp(0.5rem, 2vw, 0.75rem) 0 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   position: relative;
   display: flex;
@@ -184,60 +287,44 @@ body {
   width: 100% !important;
   height: 0%;
   background: linear-gradient(180deg, #00bfff 0%, #0077be 100%);
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 clamp(0.5rem, 2vw, 1rem) clamp(0.5rem, 2vw, 1rem);
   transition: height 0.5s cubic-bezier(0.4,0,0.2,1);
   z-index: 1;
 }
 
 .water-can-img {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 48px;
+  width: clamp(1.5rem, 4vw, 1.75rem);
+  height: clamp(1.5rem, 4vw, 1.75rem);
   z-index: 10;
   pointer-events: none;
   opacity: 0;
 }
 
-/* Water can image animation styles */
-.water-can-img {
-  position: absolute;
-  top: 2px;
-  right: 0;
-  width: 28px;
-  height: 28px;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0;
-  /* The transition is set in JS for opacity/transform */
-}
-
-/* Puzzle blank underline */
+/* Puzzle blank responsive */
 .puzzle-blank {
   display: inline-block;
-  min-width: 100px;
+  min-width: clamp(3rem, 8vw, 6.25rem);
   height: 2px;
   background-color: #000;
   vertical-align: middle;
-  margin: 0 4px;
+  margin: 0 clamp(0.25rem, 1vw, 0.25rem);
 }
 
-/* Custom input style */
+/* Custom input responsive */
 .custom-input {
   border: none;
   border-bottom: 2px solid #1fb6ff;
   background-color: transparent;
   outline: none;
-  padding: 8px 12px;
-  font-size: 1rem;
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
+  font-size: clamp(0.875rem, 3vw, 1rem);
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* Power-up button style */
+/* Power-up button responsive */
 .power-up-btn {
-  width: 60px;
-  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -245,6 +332,7 @@ body {
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .power-up-btn:hover {
@@ -252,11 +340,11 @@ body {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Custom checkbox style */
+/* Custom checkbox responsive */
 .custom-checkbox {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: clamp(1rem, 3vw, 1.25rem);
+  height: clamp(1rem, 3vw, 1.25rem);
   border: 2px solid #d1d5db;
   border-radius: 4px;
   position: relative;
@@ -279,4 +367,268 @@ body {
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+/* Loading droplet responsive */
+.loading-droplet {
+  width: clamp(2rem, 6vw, 2.5rem);
+  height: clamp(2rem, 6vw, 2.5rem);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background-color: #1fb6ff;
+  animation: droplet 1.5s infinite;
+}
+
+@keyframes droplet {
+  0% {
+    transform: rotate(-45deg) translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: rotate(-45deg) translateY(-20px);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-45deg) translateY(0);
+    opacity: 0.7;
+  }
+}
+
+/* Game over screen responsive */
+.game-over-screen {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.game-over-screen h2 {
+  font-size: clamp(2rem, 6vw, 2.5rem);
+}
+
+.game-over-screen .max-w-lg {
+  max-width: min(95vw, 32rem);
+}
+
+/* Modal responsive */
+.pollutant-challenge, .pause-menu {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.pollutant-challenge .max-w-md, .pause-menu .max-w-sm {
+  max-width: min(95vw, 28rem);
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Error screen responsive */
+.error-screen {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.error-screen .max-w-md {
+  max-width: min(95vw, 28rem);
+}
+
+.error-screen .w-20 {
+  width: clamp(3rem, 8vw, 5rem);
+  height: clamp(3rem, 8vw, 5rem);
+}
+
+/* Make the pause button more prominent */
+#pause-btn {
+  width: clamp(2.5rem, 6vw, 3rem) !important;
+  height: clamp(2.5rem, 6vw, 3rem) !important;
+  background: #e0f2fe;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(31,182,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  cursor: pointer;
+}
+
+#pause-btn:hover {
+  background: #bae6fd;
+  box-shadow: 0 4px 16px rgba(31,182,255,0.18);
+  transform: scale(1.08);
+  color: #1fb6ff;
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+  .text-6xl { font-size: 2.5rem; }
+  .text-4xl { font-size: 2rem; }
+  .text-3xl { font-size: 1.5rem; }
+  .text-2xl { font-size: 1.25rem; }
+  .text-xl { font-size: 1.125rem; }
+  .text-lg { font-size: 1rem; }
+  .text-base { font-size: 0.875rem; }
+  .text-sm { font-size: 0.75rem; }
+  .text-xs { font-size: 0.625rem; }
+}
+
+@media (min-width: 1024px) {
+  .text-6xl { font-size: 4rem; }
+  .text-4xl { font-size: 2.5rem; }
+  .text-3xl { font-size: 2rem; }
+  .text-2xl { font-size: 1.5rem; }
+  .text-xl { font-size: 1.25rem; }
+  .text-lg { font-size: 1.125rem; }
+  .text-base { font-size: 1rem; }
+  .text-sm { font-size: 0.875rem; }
+  .text-xs { font-size: 0.75rem; }
+}
+
+/* Ensure no horizontal scrolling */
+* {
+  box-sizing: border-box;
+}
+
+/* Flex utilities for better centering */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive spacing */
+.space-y-responsive > * + * {
+  margin-top: clamp(0.5rem, 2vw, 1rem);
+}
+
+.gap-responsive {
+  gap: clamp(0.5rem, 2vw, 1rem);
+}
+
+/* Ensure modals are properly centered and sized */
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  margin: auto;
+}
+
+/* Responsive button groups */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  justify-content: center;
+  width: 100%;
+}
+
+.button-group button {
+  flex: 1;
+  min-width: clamp(8rem, 20vw, 12rem);
+  max-width: 100%;
+}
+
+/* Additional responsive improvements */
+@media (max-width: 480px) {
+  .game-screen .flex-1 {
+    padding: 1rem 0.5rem;
+  }
+  
+  .game-screen .max-w-md {
+    margin: 0 0.5rem;
+  }
+  
+  .power-up-btn {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+  
+  .well-progress {
+    width: 1.25rem !important;
+    height: 3rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .game-screen .flex-1 {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-screen .flex-1 {
+    padding: 2rem;
+  }
+  
+  .game-screen .max-w-md {
+    max-width: 32rem;
+  }
+}
+
+/* Prevent text overflow */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ensure images scale properly */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+  button, .power-up-btn, #pause-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  input, .custom-input {
+    min-height: 44px;
+  }
+}
+
+/* Game Mode Selection Modal (inherits modal styles) */
+#mode-select-modal .bg-white {
+  max-width: min(95vw, 28rem);
+  width: 100%;
+}
+#mode-select-modal button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+#mode-select-modal button:focus {
+  box-shadow: 0 0 0 2px #1fb6ff33;
+}
+
+/* Close (×) icon for modals and overlays */
+#close-mode-modal,
+#close-how-to-play,
+.daily-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 30;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+#close-mode-modal:hover,
+#close-how-to-play:hover,
+.daily-close-btn:hover {
+  color: #1fb6ff;
 }
